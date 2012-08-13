@@ -14,7 +14,7 @@ module.exports = tik.Basic.extend({
 		
 		this.request = request;
 		this.response = response;
-
+		
 		if (request.method === 'POST') {
 			this._grabRequestBody();
 		}
@@ -55,13 +55,13 @@ module.exports = tik.Basic.extend({
 		
 	},
 
-	view: function(name, data) {
+	view: function(name, data, contentType) {
 		
 		if (!(name in this.views)) {
 			tik.log('No views by name: ', name);
 		}
 
-		this.response.setHeader('Content-type', 'text/html');
+		this.response.setHeader('Content-type', contentType || 'text/html');
 
 		this.response.write(this.views[name].output(data));
 		this.response.end();

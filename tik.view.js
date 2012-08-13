@@ -4,7 +4,7 @@ module.exports = tik.Class(events.EventEmitter).extend({
 		
 		this._parent.call(this);
 		
-		this.templateCodeRegex = /~:(=)?(#)?(.+?):~/g;
+		this.templateCodeRegex = /~:(=)?(#)?([\s\S]+?):~/g;
 
 		this.app = tik.app;
 		
@@ -53,7 +53,14 @@ module.exports = tik.Class(events.EventEmitter).extend({
 				isPrint = true;
 			}
 			
-			ret.push('s+=("' + nonCode.replace(/"/g,'\\"').replace(/[\r\n]/g, '\\\n\\n') + '");');
+			ret.push(
+				's+=("' +
+				nonCode
+					.replace(/\\/g, '\\\\')
+					.replace(/"/g,'\\"')
+					.replace(/[\r\n]/g, '\\\n\\n') +
+				'");'
+			);
 			ret.push(isPrint ? 's+=('+code+');' : code + ';');
 	
 			prevI = regex.lastIndex;
@@ -62,7 +69,14 @@ module.exports = tik.Class(events.EventEmitter).extend({
 	
 		if (prevI < template.length) {
 			// Push in last bit (not gained from loop)
-			ret.push('s+=("' + template.substring(prevI).replace(/"/g,'\\"').replace(/[\r\n]/g, '\\\n\\n') + '");');
+			ret.push(
+				's+=("' +
+					template.substring(prevI)
+						.replace(/\\/g, '\\\\')
+						.replace(/"/g,'\\"')
+						.replace(/[\r\n]/g, '\\\n\\n') +
+				'");'
+			);
 		}
 	
 		this.templateFn = new Function(

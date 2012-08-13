@@ -8,7 +8,7 @@ module.exports = (function(){
 		var constructor =
 			typeof definition == 'function' ? definition
 				: definition.init || function(){
-					this._parent.call(this);
+					this._parent.apply(this, arguments);
 				};
 		
 		Base = Base || Class;
